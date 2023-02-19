@@ -1,13 +1,13 @@
 import {Component} from 'react'
 import Loader from 'react-loader-spinner'
 import Cookies from 'js-cookie'
+import Profile from '../Profile'
+import Header from '../Header'
+import EmploymentTypeFilter from '../EmploymentTypeFilter'
+import SalaryRangeFilter from '../SalaryRangeFilter'
 
-const profileApiStatusConstants = {
-  initial: 'INITIAL',
-  success: 'SUCCESS',
-  failure: 'FAILURE',
-  inProgress: 'IN_PROGRESS',
-}
+import JobItem from '../JobItem'
+import './index.css'
 
 const jobsApiStatusConstants = {
   initial: 'INITIAL',
@@ -16,15 +16,51 @@ const jobsApiStatusConstants = {
   inProgress: 'IN_PROGRESS',
 }
 
+const employmentTypesList = [
+  {
+    label: 'Full Time',
+    employmentTypeId: 'FULLTIME',
+  },
+  {
+    label: 'Part Time',
+    employmentTypeId: 'PARTTIME',
+  },
+  {
+    label: 'Freelance',
+    employmentTypeId: 'FREELANCE',
+  },
+  {
+    label: 'Internship',
+    employmentTypeId: 'INTERNSHIP',
+  },
+]
+
+const salaryRangesList = [
+  {
+    salaryRangeId: '1000000',
+    label: '10 LPA and above',
+  },
+  {
+    salaryRangeId: '2000000',
+    label: '20 LPA and above',
+  },
+  {
+    salaryRangeId: '3000000',
+    label: '30 LPA and above',
+  },
+  {
+    salaryRangeId: '4000000',
+    label: '40 LPA and above',
+  },
+]
+
 class JobsPage extends Component {
   state = {
-    profileApiStatus: profileApiStatusConstants.initial,
     jobsApiStatus: jobsApiStatusConstants.initial,
-    profileDetails: {},
+    jobsData: [],
   }
 
   componentDidMount() {
-    this.getProfileData()
     this.getJobsData()
   }
 
@@ -34,9 +70,9 @@ class JobsPage extends Component {
     </div>
   )
 
-  getProfileData = async () => {
-    this.setState({profileApiStatus: profileApiStatusConstants.inProgress})
-    const url = 'https://apis.ccbp.in/profile'
+  getJobsData = async () => {
+    this.setState({jobsApiStatus: jobsApiStatusConstants.inProgress})
+    const url = 'https://apis.ccbp.in/jobs'
     const jwtToken = Cookies.get('jwt_token')
     const options = {
       method: 'GET',
@@ -49,49 +85,33 @@ class JobsPage extends Component {
 
     if (response.ok) {
       const data = await response.json()
-      const profileDetails = {
-        name: data.profile_details.name,
-        profileImageUrl: data.profile_details.profile_image_url,
-        shortBio: data.profile_details.short_bio,
-      }
+      const updatedData = data.jobs.map(eachJob => ({
+        companyLogoUrl: eachJob.company_logo_url,
+        employmentType: eachJob.employment_type,
+        id: eachJob.id,
+        jobDescription: eachJob.job_description,
+        location: eachJob.location,
+        packagePerAnnum: eachJob.package_per_annum,
+        rating: eachJob.rating,
+        title: eachJob.title,
+      }))
       this.setState({
-        profileApiStatus: profileApiStatusConstants.success,
-        profileDetails,
+        jobsData: updatedData,
+        jobsApiStatus: jobsApiStatusConstants.success,
       })
-    } else {
-      this.setState({profileApiStatus: profileApiStatusConstants.failure})
     }
   }
 
-  getJobsData = async () => {
-    this.setState({jobsApiStatus: profileApiStatusConstants.inProgress})
-    const url = 'https://apis.ccbp.in/jobs'
-  }
-
-  renderProfileDetails = () => {
-    const {profileDetails} = this.state
-    console.log(profileDetails)
-    const {name, profileImageUrl, shortBio} = profileDetails
+  renderJobs = () => {
+    const {jobsData} = this.state
     return (
-      <div className="profile-details-container">
-        <img
-          src={profileImageUrl}
-          className="profile-image"
-          alt="profile url"
-        />
-        <p>{name}</p>
-        <p>{shortBio}</p>
-      </div>
+      <ul className="jobs-container">
+        {jobsData.map(eachItem => (
+          <JobItem jobItem={eachItem} key={eachItem.id} />
+        ))}
+      </ul>
     )
   }
-
-  renderProfileDetailsFailureView = () => (
-    <div>
-      <button type="button">Retry</button>
-    </div>
-  )
-
-  renderJobs = () => {}
 
   renderJobsFailureView = () => (
     <div>
@@ -102,21 +122,6 @@ class JobsPage extends Component {
       />
     </div>
   )
-
-  renderProfilePage = () => {
-    const {profileApiStatus} = this.state
-
-    switch (profileApiStatus) {
-      case profileApiStatusConstants.inProgress:
-        return this.loadingView()
-      case profileApiStatusConstants.success:
-        return this.renderProfileDetails()
-      case profileApiStatusConstants.failure:
-        return this.renderProfileDetailsFailureView()
-      default:
-        return null
-    }
-  }
 
   renderJobsPage = () => {
     const {jobsApiStatus} = this.state
@@ -133,15 +138,48 @@ class JobsPage extends Component {
     }
   }
 
+  renderEmploymentTypeFilter = () => (
+    <ul>
+      {employmentTypesList.map(employmentItem => (
+        <EmploymentTypeFilter
+          employmentItem={employmentItem}
+          key={employmentItem.employmentTypeId}
+        />
+      ))}
+    </ul>
+  )
+
+  renderSalaryRangeContainer = () => (
+    <ul>
+      {salaryRangesList.map(salaryRangeItem => (
+        <SalaryRangeFilter
+          salaryRangeItem={salaryRangeItem}
+          key={salaryRangeItem.salaryRangeId}
+        />
+      ))}
+    </ul>
+  )
+
   render() {
     return (
-      <div>
-        {this.renderProfilePage()}
-        <div>
-          <input type="search" className="search-input" />
-          {this.renderJobsPage()}
+      <>
+        <Header />
+        <div className="jobs-page-container">
+          <div>
+            <Profile />
+            <div className="employment-type-filter-container">
+              {this.renderEmploymentTypeFilter()}
+            </div>
+            <div className="salary-range-container">
+              {this.renderSalaryRangeContainer()}
+            </div>
+          </div>
+          <div>
+            <input type="search" className="search-input" />
+            {this.renderJobsPage()}
+          </div>
         </div>
-      </div>
+      </>
     )
   }
 }

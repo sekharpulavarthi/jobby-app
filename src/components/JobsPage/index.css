@@ -1,0 +1,6 @@
+.jobs-page-container {
+  display: flex;
+  background-color: black;
+  height: 100vh;
+  padding-top: 15px;
+}
