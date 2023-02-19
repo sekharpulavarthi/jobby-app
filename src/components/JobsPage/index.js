@@ -58,6 +58,7 @@ class JobsPage extends Component {
   state = {
     jobsApiStatus: jobsApiStatusConstants.initial,
     jobsData: [],
+    salaryRange: '',
   }
 
   componentDidMount() {
@@ -144,10 +145,16 @@ class JobsPage extends Component {
         <EmploymentTypeFilter
           employmentItem={employmentItem}
           key={employmentItem.employmentTypeId}
+          employmentTypesList={employmentTypesList}
         />
       ))}
     </ul>
   )
+
+  onChangeSalaryRange = salary => {
+    const {salaryRange} = this.state
+    this.setState({salaryRange: salary})
+  }
 
   renderSalaryRangeContainer = () => (
     <ul>
@@ -155,6 +162,8 @@ class JobsPage extends Component {
         <SalaryRangeFilter
           salaryRangeItem={salaryRangeItem}
           key={salaryRangeItem.salaryRangeId}
+          onChangeSalaryRange={this.onChangeSalaryRange}
+          salaryRangesList={salaryRangesList}
         />
       ))}
     </ul>
