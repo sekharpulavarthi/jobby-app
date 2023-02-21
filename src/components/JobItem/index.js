@@ -1,3 +1,4 @@
+import {Link} from 'react-router-dom'
 import {AiFillStar} from 'react-icons/ai'
 import {MdLocationOn} from 'react-icons/md'
 import {BsBriefcaseFill} from 'react-icons/bs'
@@ -11,41 +12,43 @@ const JobItem = props => {
     companyLogoUrl,
     employmentType,
     jobDescription,
-    id,
     location,
     packagePerAnnum,
     rating,
+    id,
   } = jobItem
 
   return (
-    <div className="job-item-container">
-      <div className="logo-container">
-        <img src={companyLogoUrl} className="company-logo-url" alt={title} />
-        <div className="title-container">
-          <h1 className="title">{title}</h1>
-          <div className="rating-container">
-            <AiFillStar className="rating-logo" />
-            <p className="rating">{rating}</p>
+    <Link to={`/jobs/${id}`}>
+      <div className="job-item-container">
+        <div className="logo-container">
+          <img src={companyLogoUrl} className="company-logo-url" alt={title} />
+          <div className="title-container">
+            <h1 className="title">{title}</h1>
+            <div className="rating-container">
+              <AiFillStar className="rating-logo" />
+              <p className="rating">{rating}</p>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="location-employment-package-container">
-        <div className="location-employment-container">
-          <div className="location-container">
-            <MdLocationOn className="location-logo" />
-            <p className="location">{location}</p>
+        <div className="location-employment-package-container">
+          <div className="location-employment-container">
+            <div className="location-container">
+              <MdLocationOn className="location-logo" />
+              <p className="location">{location}</p>
+            </div>
+            <div className="employment-type-container">
+              <BsBriefcaseFill className="employment-logo" />
+              <p className="employment-type">{employmentType}</p>
+            </div>
           </div>
-          <div className="employment-type-container">
-            <BsBriefcaseFill className="employment-logo" />
-            <p className="employment-type">{employmentType}</p>
-          </div>
+          <p className="package">{packagePerAnnum}</p>
         </div>
-        <p className="package">{packagePerAnnum}</p>
+        <hr />
+        <p className="description-text">Description</p>
+        <p className="description">{jobDescription}</p>
       </div>
-      <hr />
-      <p className="description-text">Description</p>
-      <p className="description">{jobDescription}</p>
-    </div>
+    </Link>
   )
 }
 

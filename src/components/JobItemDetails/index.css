@@ -1,0 +1,29 @@
+.des-url-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #4f46e5;
+}
+
+.tech-logo {
+  width: 50px;
+}
+
+.skill-logo-container {
+  display: flex;
+  align-items: center;
+  width: 150px;
+}
+
+.skills-container-v2 {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.skills-heading {
+  color: white;
+}
+
+.skill-name {
+  color: white;
+}

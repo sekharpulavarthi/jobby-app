@@ -1,8 +1,13 @@
 import './index.css'
 
 const EmploymentTypeFilter = props => {
-  const {employmentItem} = props
+  const {employmentItem, onChangeTypeFilter} = props
   const {label, employmentTypeId, employmentTypesList} = employmentItem
+
+  const onChangeTypeFilterItem = () => {
+    onChangeTypeFilter(employmentTypeId)
+  }
+
   return (
     <div className="employment-item-container">
       <input
@@ -10,6 +15,7 @@ const EmploymentTypeFilter = props => {
         value={employmentTypeId}
         id={employmentTypeId}
         name={employmentTypesList}
+        onChange={onChangeTypeFilterItem}
       />
       <label htmlFor={employmentTypeId}>{label}</label>
     </div>

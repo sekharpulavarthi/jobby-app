@@ -59,6 +59,8 @@ class JobsPage extends Component {
     jobsApiStatus: jobsApiStatusConstants.initial,
     jobsData: [],
     salaryRange: '',
+    employmentTypes: [],
+    searchInput: '',
   }
 
   componentDidMount() {
@@ -71,9 +73,19 @@ class JobsPage extends Component {
     </div>
   )
 
+  getEmploymentTypes = () => {
+    const {employmentTypes} = this.state
+    let concatenatedString = ''
+    concatenatedString = employmentTypes.map(item => item).join(',')
+
+    return concatenatedString
+  }
+
   getJobsData = async () => {
+    const {salaryRange, searchInput} = this.state
     this.setState({jobsApiStatus: jobsApiStatusConstants.inProgress})
-    const url = 'https://apis.ccbp.in/jobs'
+    const employmentsTypes = this.getEmploymentTypes()
+    const url = `https://apis.ccbp.in/jobs?employment_type=${employmentsTypes}&minimum_package=${salaryRange}&search=${searchInput}`
     const jwtToken = Cookies.get('jwt_token')
     const options = {
       method: 'GET',
@@ -105,12 +117,19 @@ class JobsPage extends Component {
 
   renderJobs = () => {
     const {jobsData} = this.state
-    return (
+    const shouldShowJobs = jobsData.length > 0
+
+    return shouldShowJobs ? (
       <ul className="jobs-container">
         {jobsData.map(eachItem => (
           <JobItem jobItem={eachItem} key={eachItem.id} />
         ))}
       </ul>
+    ) : (
+      <img
+        src="https://assets.ccbp.in/frontend/react-js/no-jobs-img.png"
+        alt="no jobs"
+      />
     )
   }
 
@@ -139,6 +158,25 @@ class JobsPage extends Component {
     }
   }
 
+  onChangeTypeFilter = employmentTypeId => {
+    const {employmentTypes} = this.state
+
+    if (employmentTypes.includes(employmentTypeId)) {
+      const updatedList = employmentTypes.filter(
+        item => item !== employmentTypeId,
+      )
+
+      this.setState({employmentTypes: updatedList}, this.getJobsData)
+    } else {
+      this.setState(
+        prevState => ({
+          employmentTypes: [...prevState.employmentTypes, employmentTypeId],
+        }),
+        this.getJobsData,
+      )
+    }
+  }
+
   renderEmploymentTypeFilter = () => (
     <ul>
       {employmentTypesList.map(employmentItem => (
@@ -146,14 +184,14 @@ class JobsPage extends Component {
           employmentItem={employmentItem}
           key={employmentItem.employmentTypeId}
           employmentTypesList={employmentTypesList}
+          onChangeTypeFilter={this.onChangeTypeFilter}
         />
       ))}
     </ul>
   )
 
   onChangeSalaryRange = salary => {
-    const {salaryRange} = this.state
-    this.setState({salaryRange: salary})
+    this.setState({salaryRange: salary}, this.getJobsData)
   }
 
   renderSalaryRangeContainer = () => (
@@ -169,7 +207,12 @@ class JobsPage extends Component {
     </ul>
   )
 
+  onChangeSearchInput = event => {
+    this.setState({searchInput: event.target.value}, this.getJobsData)
+  }
+
   render() {
+    const {searchInput} = this.state
     return (
       <>
         <Header />
@@ -184,7 +227,12 @@ class JobsPage extends Component {
             </div>
           </div>
           <div>
-            <input type="search" className="search-input" />
+            <input
+              type="search"
+              className="search-input"
+              onChange={this.onChangeSearchInput}
+              value={searchInput}
+            />
             {this.renderJobsPage()}
           </div>
         </div>
