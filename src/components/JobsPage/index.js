@@ -1,4 +1,6 @@
 import {Component} from 'react'
+import {AiOutlineSearch} from 'react-icons/ai'
+
 import Loader from 'react-loader-spinner'
 import Cookies from 'js-cookie'
 import Profile from '../Profile'
@@ -112,6 +114,10 @@ class JobsPage extends Component {
         jobsData: updatedData,
         jobsApiStatus: jobsApiStatusConstants.success,
       })
+    } else {
+      this.setState({
+        jobsApiStatus: jobsApiStatusConstants.failure,
+      })
     }
   }
 
@@ -140,6 +146,11 @@ class JobsPage extends Component {
         alt="failure view"
         className="jobs-failure"
       />
+      <h1>Oops! Something Went Wrong</h1>
+      <p>We cannot seem to find the page you are looking for</p>
+      <button type="button" onClick={this.getJobsData}>
+        Retry
+      </button>
     </div>
   )
 
@@ -227,12 +238,21 @@ class JobsPage extends Component {
             </div>
           </div>
           <div>
-            <input
-              type="search"
-              className="search-input"
-              onChange={this.onChangeSearchInput}
-              value={searchInput}
-            />
+            <div>
+              <input
+                type="search"
+                className="search-input"
+                onChange={this.onChangeSearchInput}
+                value={searchInput}
+              />
+              <button
+                type="button"
+                onClick={this.getJobsData}
+                data-testid="searchButton"
+              >
+                <AiOutlineSearch />
+              </button>
+            </div>
             {this.renderJobsPage()}
           </div>
         </div>

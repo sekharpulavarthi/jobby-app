@@ -4,6 +4,7 @@ import {MdLocationOn} from 'react-icons/md'
 import {BsBriefcaseFill} from 'react-icons/bs'
 import Loader from 'react-loader-spinner'
 import Cookies from 'js-cookie'
+import SimilarJobItem from '../SimilarJobItem'
 import './index.css'
 
 const apiStatusConstants = {
@@ -41,17 +42,17 @@ class JobItemDetails extends Component {
 
     if (response.ok) {
       const data = await response.json()
-      console.log(data)
+      //   console.log(data)
       const skills = data.job_details.skills.map(skill => ({
         name: skill.name,
         imageUrl: skill.image_url,
       }))
 
       const similarJobs = data.similar_jobs.map(similarJob => ({
-        company_logo_url: similarJob.company_logo_url,
-        employment_type: similarJob.employment_type,
+        companyLogoUrl: similarJob.company_logo_url,
+        employmentType: similarJob.employment_type,
         id: similarJob.id,
-        job_description: similarJob.job_description,
+        jobDescription: similarJob.job_description,
         location: similarJob.location,
         rating: similarJob.rating,
         title: similarJob.title,
@@ -79,8 +80,7 @@ class JobItemDetails extends Component {
         similarJobs,
         apiStatus: apiStatusConstants.success,
       })
-    }
-    if (response.status === 404) {
+    } else {
       this.setState({
         apiStatus: apiStatusConstants.failure,
       })
@@ -88,7 +88,7 @@ class JobItemDetails extends Component {
   }
 
   renderJobItemDetailsView = () => {
-    const {jobDetails} = this.state
+    const {jobDetails, similarJobs} = this.state
     const {
       title,
       companyLogoUrl,
@@ -134,12 +134,12 @@ class JobItemDetails extends Component {
           </div>
           <hr />
           <div className="des-url-container">
-            <p className="description-text">Description</p>
+            <h1 className="description-text">Description</h1>
             <a href={companyWebsiteUrl} target="__blank">
               Visit
             </a>
           </div>
-          <p className="description">{jobDescription}</p>
+          <h1 className="description">{jobDescription}</h1>
         </div>
         <div className="skills-container-v1">
           <h2 className="skills-heading">Skills</h2>
@@ -167,6 +167,12 @@ class JobItemDetails extends Component {
             />
           </div>
         </div>
+        <ul>
+          <h1>Similar Jobs</h1>
+          {similarJobs.map(eachJob => (
+            <SimilarJobItem similarJobItemDetails={eachJob} key={eachJob.id} />
+          ))}
+        </ul>
       </div>
     )
   }
@@ -184,7 +190,11 @@ class JobItemDetails extends Component {
         src="https://assets.ccbp.in/frontend/react-js/failure-img.png"
         className="failure-view-image"
       />
-      <h1 className="product-not-found-heading">Product Not Found</h1>
+      <h1 className="product-not-found-heading">Oops! Something Went Wrong</h1>
+      <p>We cannot seem to find the page you are looking for</p>
+      <button type="button" onClick={this.getJobItemDetails}>
+        Retry
+      </button>
     </div>
   )
 

@@ -9,7 +9,7 @@ const EmploymentTypeFilter = props => {
   }
 
   return (
-    <div className="employment-item-container">
+    <li className="employment-item-container">
       <input
         type="checkbox"
         value={employmentTypeId}
@@ -18,7 +18,7 @@ const EmploymentTypeFilter = props => {
         onChange={onChangeTypeFilterItem}
       />
       <label htmlFor={employmentTypeId}>{label}</label>
-    </div>
+    </li>
   )
 }
 

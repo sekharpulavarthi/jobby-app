@@ -9,7 +9,7 @@ const SalaryRangeFilter = props => {
   }
 
   return (
-    <div className="sarary-range-items-container">
+    <li className="sarary-range-items-container">
       <input
         id={salaryRangeId}
         value={salaryRangeId}
@@ -18,7 +18,7 @@ const SalaryRangeFilter = props => {
         onChange={onChangeSalaryRangeItem}
       />
       <label htmlFor={salaryRangeId}>{label}</label>
-    </div>
+    </li>
   )
 }
 
