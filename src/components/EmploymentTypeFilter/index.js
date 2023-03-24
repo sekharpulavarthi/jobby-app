@@ -2,8 +2,7 @@ import './index.css'
 
 const EmploymentTypeFilter = props => {
   const {employmentItem, onChangeTypeFilter} = props
-  const {label, employmentTypeId, employmentTypesList} = employmentItem
-
+  const {label, employmentTypeId} = employmentItem
   const onChangeTypeFilterItem = () => {
     onChangeTypeFilter(employmentTypeId)
   }
@@ -14,7 +13,6 @@ const EmploymentTypeFilter = props => {
         type="checkbox"
         value={employmentTypeId}
         id={employmentTypeId}
-        name={employmentTypesList}
         onChange={onChangeTypeFilterItem}
       />
       <label htmlFor={employmentTypeId}>{label}</label>

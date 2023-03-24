@@ -62,7 +62,7 @@ class Profile extends Component {
     return (
       <div className="profile-details-container">
         <img src={profileImageUrl} className="profile-image" alt="profile" />
-        <p className="profile-name">{name}</p>
+        <h1 className="profile-name">{name}</h1>
         <p className="short-bio">{shortBio}</p>
       </div>
     )
@@ -70,7 +70,9 @@ class Profile extends Component {
 
   renderProfileDetailsFailureView = () => (
     <div>
-      <button type="button">Retry</button>
+      <button type="button" onClick={this.getProfileData}>
+        Retry
+      </button>
     </div>
   )
 

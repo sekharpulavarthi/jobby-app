@@ -1,7 +1,7 @@
 import './index.css'
 
 const SalaryRangeFilter = props => {
-  const {salaryRangeItem, onChangeSalaryRange, salaryRangesList} = props
+  const {salaryRangeItem, onChangeSalaryRange} = props
   const {salaryRangeId, label} = salaryRangeItem
 
   const onChangeSalaryRangeItem = () => {
@@ -14,7 +14,6 @@ const SalaryRangeFilter = props => {
         id={salaryRangeId}
         value={salaryRangeId}
         type="radio"
-        name={salaryRangesList}
         onChange={onChangeSalaryRangeItem}
       />
       <label htmlFor={salaryRangeId}>{label}</label>

@@ -70,7 +70,7 @@ class JobsPage extends Component {
   }
 
   loadingView = () => (
-    <div className="products-loader-container">
+    <div className="products-loader-container" data-testid="loader">
       <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />
     </div>
   )
@@ -85,8 +85,10 @@ class JobsPage extends Component {
 
   getJobsData = async () => {
     const {salaryRange, searchInput} = this.state
+
     this.setState({jobsApiStatus: jobsApiStatusConstants.inProgress})
     const employmentsTypes = this.getEmploymentTypes()
+    // console.log(employmentsTypes, salaryRange, searchInput)
     const url = `https://apis.ccbp.in/jobs?employment_type=${employmentsTypes}&minimum_package=${salaryRange}&search=${searchInput}`
     const jwtToken = Cookies.get('jwt_token')
     const options = {
@@ -132,10 +134,14 @@ class JobsPage extends Component {
         ))}
       </ul>
     ) : (
-      <img
-        src="https://assets.ccbp.in/frontend/react-js/no-jobs-img.png"
-        alt="no jobs"
-      />
+      <div>
+        <h1>No Jobs Found</h1>
+        <p>We could not find any jobs. Try other filters</p>
+        <img
+          src="https://assets.ccbp.in/frontend/react-js/no-jobs-img.png"
+          alt="no jobs"
+        />
+      </div>
     )
   }
 
@@ -190,11 +196,11 @@ class JobsPage extends Component {
 
   renderEmploymentTypeFilter = () => (
     <ul>
+      <h1>Type of Employment</h1>
       {employmentTypesList.map(employmentItem => (
         <EmploymentTypeFilter
           employmentItem={employmentItem}
           key={employmentItem.employmentTypeId}
-          employmentTypesList={employmentTypesList}
           onChangeTypeFilter={this.onChangeTypeFilter}
         />
       ))}
@@ -207,19 +213,19 @@ class JobsPage extends Component {
 
   renderSalaryRangeContainer = () => (
     <ul>
+      <h1>Salary Range</h1>
       {salaryRangesList.map(salaryRangeItem => (
         <SalaryRangeFilter
           salaryRangeItem={salaryRangeItem}
           key={salaryRangeItem.salaryRangeId}
           onChangeSalaryRange={this.onChangeSalaryRange}
-          salaryRangesList={salaryRangesList}
         />
       ))}
     </ul>
   )
 
   onChangeSearchInput = event => {
-    this.setState({searchInput: event.target.value}, this.getJobsData)
+    this.setState({searchInput: event.target.value})
   }
 
   render() {

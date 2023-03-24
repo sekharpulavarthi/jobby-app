@@ -657,6 +657,7 @@ describe(':::RJSCPAW11J_TEST_SUITE_3:::Jobs Route tests', () => {
     mockGetCookie()
     const mockFetchFunction = jest.fn().mockImplementation(url => {
       if (url === profileApiUrl) {
+        console.log(url, profileApiUrl)
         return {
           ok: true,
           json: () => Promise.resolve(profileResponse),

@@ -5,6 +5,7 @@ import {BsBriefcaseFill} from 'react-icons/bs'
 import Loader from 'react-loader-spinner'
 import Cookies from 'js-cookie'
 import SimilarJobItem from '../SimilarJobItem'
+import Header from '../Header'
 import './index.css'
 
 const apiStatusConstants = {
@@ -109,7 +110,7 @@ class JobItemDetails extends Component {
             <img
               src={companyLogoUrl}
               className="company-logo-url"
-              alt={title}
+              alt="job details company logo"
             />
             <div className="title-container">
               <h1 className="title">{title}</h1>
@@ -139,10 +140,10 @@ class JobItemDetails extends Component {
               Visit
             </a>
           </div>
-          <h1 className="description">{jobDescription}</h1>
+          <p className="description">{jobDescription}</p>
         </div>
         <div className="skills-container-v1">
-          <h2 className="skills-heading">Skills</h2>
+          <h1 className="skills-heading">Skills</h1>
           <ul className="skills-container-v2">
             {skills.map(skill => (
               <li key={skill.name} className="skill-logo-container">
@@ -162,7 +163,7 @@ class JobItemDetails extends Component {
             <p>{description}</p>
             <img
               src={imageUrl}
-              alt="life-at-company"
+              alt="life at company"
               className="life-at-company-img"
             />
           </div>
@@ -214,7 +215,12 @@ class JobItemDetails extends Component {
   }
 
   render() {
-    return <div>{this.renderJobItemDetails()}</div>
+    return (
+      <div>
+        <Header />
+        {this.renderJobItemDetails()}
+      </div>
+    )
   }
 }
 
